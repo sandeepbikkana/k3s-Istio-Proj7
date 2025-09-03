@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: demo-vs
+  namespace: {{ .Values.namespace.name }}
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - {{ .Values.gateway.name }}
+  http:
+    - route:
+        - destination:
+            host: demo.{{ .Values.namespace.name }}.svc.cluster.local
+            subset: {{ .Values.stable.appVersion }}
+          weight: {{ .Values.stable.weight }}
+        - destination:
+            host: demo.{{ .Values.namespace.name }}.svc.cluster.local
+            subset: {{ .Values.canary.appVersion }}
+          weight: {{ .Values.canary.weight }}

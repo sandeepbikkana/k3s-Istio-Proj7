@@ -1,0 +1,27 @@
+image:
+  repository: sandeepbikkana87/demo-canary
+  pullPolicy: IfNotPresent
+
+stable:
+  tag: v1
+  replicas: 2
+  appVersion: v1
+  weight: 80
+
+canary:
+  tag: v2
+  replicas: 1
+  appVersion: v2
+  weight: 20
+
+service:
+  port: 80
+  targetPort: 3000
+
+namespace:
+  name: canary-demo
+  istioInjection: enabled
+
+gateway:
+  host: "*"
+  name: demo-gateway

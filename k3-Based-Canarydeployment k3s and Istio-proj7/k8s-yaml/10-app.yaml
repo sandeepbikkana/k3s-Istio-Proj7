@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-v1
+  namespace: canary-demo
+  labels:
+    app: demo
+    version: v1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: demo
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: demo
+        version: v1
+    spec:
+      containers:
+        - name: demo
+          image: sandeepbikkana87/demo-canary:v1
+          env:
+            - name: APP_VERSION
+              value: "v1"
+          ports:
+            - containerPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-v2
+  namespace: canary-demo
+  labels:
+    app: demo
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: demo
+        version: v2
+    spec:
+      containers:
+        - name: demo
+          image: sandeepbikkana87/demo-canary:v2
+          env:
+            - name: APP_VERSION
+              value: "v2"
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo
+  namespace: canary-demo
+  labels:
+    app: demo
+spec:
+  selector:
+    app: demo
+  ports:
+    - name: http
+      port: 80
+      targetPort: 3000

@@ -1,0 +1,14 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: demo-dr
+  namespace: {{ .Values.namespace.name }}
+spec:
+  host: demo.{{ .Values.namespace.name }}.svc.cluster.local
+  subsets:
+    - name: {{ .Values.stable.appVersion }}
+      labels:
+        version: {{ .Values.stable.appVersion }}
+    - name: {{ .Values.canary.appVersion }}
+      labels:
+        version: {{ .Values.canary.appVersion }}
